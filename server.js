@@ -9,13 +9,29 @@ const init = async () => {
         port: 1234
     });
 
-    server.route({
+    server.route([{
         method: 'GET',
         path: '/',
         handler: (request, h) => {
             return "<h1>Hello World!</h1>"
         }
-    });
+    },
+    {
+        method: 'GET',
+        path: '/users/{soccer?}',
+        handler: (request, h) => {
+
+            h.redirect('/');
+
+        }
+    },
+    {
+        method: 'GET',
+        path: '/{any*}',
+        handler: (request, h) => {
+            return "<h1>Oh no! You must be lost!</h1>"
+        }
+    }]);
 
     await server.start();
     console.log(`Server started on: ${server.info.uri}`);
