@@ -21,7 +21,7 @@ const init = async () => {
         path: '/users/{soccer?}',
         handler: (request, h) => {
 
-            h.redirect('/');
+            return h.redirect('/');
 
         }
     },
