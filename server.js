@@ -34,6 +34,17 @@ const init = async () => {
         }
     },
     {
+        method: 'POST',
+        path: '/login',
+        handler: (request, h) => {
+            if (request.payload.username === "WittCode" && request.payload.password === "1234") {
+                return h.file('logged-in.html');
+            } else {
+                return h.redirect('/');
+            }
+        }
+    },
+    {
         method: 'GET',
         path: '/download',
         handler: (request, h) => {
