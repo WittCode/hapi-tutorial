@@ -19,12 +19,23 @@ const init = async () => {
     await server.register([{
         plugin: require('hapi-geo-locate'),
         options: {
-            enabledByDefault: false
+            enabledByDefault: true
         }
     },
     {
         plugin: Inert
+    },
+    {
+        plugin: require('@hapi/vision')
     }]);
+
+    server.views({
+        engines: {
+            hbs: require('handlebars')
+        },
+        path: path.join(__dirname, 'views'),
+        layout: 'default'
+    })
 
     server.route([{
         method: 'GET',
@@ -34,14 +45,20 @@ const init = async () => {
         }
     },
     {
+        method: 'GET',
+        path: '/dynamic',
+        handler: (request, h) => {
+            const data = {
+                name: 'WittCode'
+            }
+            return h.view('index', data);
+        }
+    },
+    {
         method: 'POST',
         path: '/login',
         handler: (request, h) => {
-            if (request.payload.username === "WittCode" && request.payload.password === "1234") {
-                return h.file('logged-in.html');
-            } else {
-                return h.redirect('/');
-            }
+            return h.view('index', { username: request.payload.username });
         }
     },
     {
@@ -59,9 +76,9 @@ const init = async () => {
         path: '/location',
         handler: (request, h) => {
             if (request.location) {
-                return request.location;
+                return h.view('location', { location: request.location.ip });
             } else {
-                return "<h1>Your location is not enabled by default!</h1>";
+                return h.view('location', { location: 'Your location is not enabled.' });
             }
         }
     },
