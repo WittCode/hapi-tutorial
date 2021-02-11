@@ -15,11 +15,11 @@ const Users = dbConnection.define('users', {
     password: {
         type: DataTypes.STRING
     }
-},
+    },
     {
         freezeTableName: true,
         timestamps: false
-    });
+});
 
 module.exports.createUser = function (username, password) {
 
