@@ -3,6 +3,8 @@
 const Hapi = require('@hapi/hapi');
 const Inert = require('@hapi/inert');
 const path = require('path');
+const Connection = require('./dbconfig');
+const Users = require('./models/users');
 
 const init = async () => {
 
@@ -46,47 +48,18 @@ const init = async () => {
     },
     {
         method: 'GET',
-        path: '/dynamic',
-        handler: (request, h) => {
-            const data = {
-                name: 'WittCode'
-            }
-            return h.view('index', data);
+        path: '/getUsers',
+        handler: async (request, h) => {
+            const dbConnection = await Connection.connect;
+            return h.view('index', { users });
         }
     },
     {
         method: 'POST',
         path: '/login',
         handler: (request, h) => {
+            Users.createUser(request.payload.username, request.payload.password);
             return h.view('index', { username: request.payload.username });
-        }
-    },
-    {
-        method: 'GET',
-        path: '/download',
-        handler: (request, h) => {
-            return h.file('welcome.html', {
-                mode: 'inline',
-                filename: 'welcome-download.html'
-            });
-        }
-    },
-    {
-        method: 'GET',
-        path: '/location',
-        handler: (request, h) => {
-            if (request.location) {
-                return h.view('location', { location: request.location.ip });
-            } else {
-                return h.view('location', { location: 'Your location is not enabled.' });
-            }
-        }
-    },
-    {
-        method: 'GET',
-        path: '/users/{soccer?}',
-        handler: (request, h) => {
-            return "<h1>USERS PAGE</h1>";
         }
     },
     {

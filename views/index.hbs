@@ -1,1 +1,7 @@
 <h1>Hello {{ username }}</h1>
+
+<h2>The other users are</h2>
+
+{{#each users}}
+<h3>{{this.username}}</h3>
+{{/each}}
